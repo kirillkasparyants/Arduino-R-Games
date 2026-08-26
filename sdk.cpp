@@ -50,16 +50,6 @@ void add_dword(uint32_t dw) {
     add_byte((dw >> 24) & 0xFF);
 }
 
-void add_header() {
-    add_byte('A');
-    add_byte('R');
-    add_byte('G');
-}
-
-void add_end() {
-    add_byte(0xFF);
-}
-
 struct Command {
     regex pattern;
     function<void(const smatch&)> handler;
@@ -118,8 +108,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    add_header();
-
+    add_byte('A');
+    add_byte('R');
+    add_byte('G');
+    
     string line;
     int line_num = 0;
     while (getline(file, line)) {
@@ -131,7 +123,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    add_end();
+    add_byte(0xFF);
 
     string data = bytecode_to_string();
     string output = templ;
